@@ -12,11 +12,13 @@ import { Checkbox } from "expo-checkbox";
 import IconButton from "@/components/IconButton";
 
 import { useState } from "react";
+import { useRouter } from "expo-router";
 const SHEET_BG = Colors.muted; // sheet background
 const SHEET_TEXT = "#FFFFFF"; // text color
 const ProfileScreen = () => {
   const [isChecked, setChecked] = React.useState(false);
   const [isPresented, setIsPresented] = useState(false);
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Text style={styles.profileText}>Profile</Text>
@@ -44,9 +46,7 @@ const ProfileScreen = () => {
             name="arrow-forward"
             size={24}
             color={Colors.muted}
-            onPress={() => {
-              console.log("Report a mistake pressed");
-            }}
+            onPress={() => router.push("/report")}
           />
         </View>
         {/* About a gantabya*/}
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   aboutText: { fontSize: 16, lineHeight: 24, color: SHEET_TEXT },
 });

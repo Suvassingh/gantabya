@@ -1,8 +1,10 @@
-import WelcomeScreen from "@/screens/WelcomeScreen";
+import HomeScreen from "@/screens/HomeScreen";
 import { Text, View, StyleSheet } from "react-native";
 
 export default function Index() {
-  return <WelcomeScreen />;
+  return(
+    <HomeScreen/>
+  );
 }
 
 const styles = StyleSheet.create({

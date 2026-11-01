@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: 2,
+    
   },
 
   activeButton: {
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
 
   inactiveButton: {
     backgroundColor: Colors.onPrimary,
-    borderColor: Colors.onPrimary,
+    borderColor: Colors.muted,
   },
   inactiveText: {
     color: Colors.muted,

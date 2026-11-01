@@ -1,16 +1,3 @@
-import HomeScreen from "@/screens/HomeScreen";
-import { Text, View, StyleSheet } from "react-native";
+import WelcomeScreen from "@/screens/WelcomeScreen";
 
-export default function Index() {
-  return(
-    <HomeScreen/>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default WelcomeScreen;

@@ -3,9 +3,11 @@ import React from "react";
 import { Colors } from "../constants/colors";
 import GeneralButton from "@/components/GeneralButton";
 import PillButton from "@/components/PillButton";
+import { useRouter } from "expo-router";
 const WelcomeScreen = () => {
+  const router = useRouter();
   function getStartedHandler() {
-    console.log("clicked");
+    router.push("/(tabs)");
   }
   return (
     <View style={styles.container}>
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     width: "100%",
-    marginTop: "auto", 
+    marginTop: "auto",
   },
   languageText: {
     fontSize: 14,

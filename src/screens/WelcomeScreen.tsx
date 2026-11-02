@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 const WelcomeScreen = () => {
   const router = useRouter();
   function getStartedHandler() {
-    router.push("/(tabs)");
+    router.push("/login");
   }
   return (
     <View style={styles.container}>

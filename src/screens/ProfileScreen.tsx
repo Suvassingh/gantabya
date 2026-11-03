@@ -13,12 +13,20 @@ import IconButton from "@/components/IconButton";
 
 import { useState } from "react";
 import { useRouter } from "expo-router";
-const SHEET_BG = Colors.muted; // sheet background
-const SHEET_TEXT = "#FFFFFF"; // text color
+import GeneralButton from "@/components/GeneralButton";
+import { signOut } from "@/services/auth";
+import { Alert } from "react-native";
+import { Platform } from "react-native";
+import { useAuth } from "@/store/AuthContext";
+const SHEET_BG = Colors.muted;
+const SHEET_TEXT = "#FFFFFF";
 const ProfileScreen = () => {
   const [isChecked, setChecked] = React.useState(false);
   const [isPresented, setIsPresented] = useState(false);
   const router = useRouter();
+  const { user } = useAuth();
+  console.log("[profile] user:", user?.email ?? "null");
+
   return (
     <View style={styles.container}>
       <Text style={styles.profileText}>Profile</Text>
@@ -89,6 +97,23 @@ const ProfileScreen = () => {
           </Modal>
         </View>
       </View>
+      <GeneralButton
+        onPress={async () => {
+          if (Platform.OS === "web") {
+            const ok =
+              typeof window !== "undefined" &&
+              window.confirm("Are you sure you want to logout?");
+            if (!ok) return;
+            await signOut();
+            return;
+          }
+          Alert.alert("Logout", "Are you sure you want to logout?", [
+            { text: "Cancel", style: "cancel" },
+            { text: "Logout", style: "destructive", onPress: () => signOut() },
+          ]);
+        }}
+        title="Logout"
+      />
     </View>
   );
 };

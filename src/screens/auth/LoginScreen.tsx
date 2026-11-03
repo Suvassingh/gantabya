@@ -11,10 +11,22 @@ import { Colors } from "@/constants/colors";
 import IconButton from "@/components/IconButton";
 import GeneralButton from "@/components/GeneralButton";
 import { useRouter } from "expo-router";
+import { signInWithEmailAndPassword } from "@/services/auth";
 
 function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const handleAuthAction = async () => {
+    if (!email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    await signInWithEmailAndPassword(email, password);
+
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.login}>Welcome back!</Text>
@@ -29,12 +41,22 @@ function LoginScreen() {
         />
       </View>
       <Text>Email</Text>
-      <TextInput style={styles.input} placeholder="you@gmail.com" />
+      <TextInput style={styles.input} placeholder="you@gmail.com" 
+      value={email}
+      onChangeText={setEmail}
+      keyboardType="email-address"
+      autoCapitalize="none"
+      autoCorrect={false}
+      />
 
       <Text>Password</Text>
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.passwordInput}
+          value={password}
+          onChangeText={setPassword}
+          autoCapitalize="none"
+          autoCorrect={false}
           placeholder="********"
           secureTextEntry={!showPassword}
         />
@@ -48,7 +70,7 @@ function LoginScreen() {
       <View style={styles.forget}>
         <Text style={styles.forgetText}>Forgot password?</Text>
       </View>
-      <GeneralButton title="Login" onPress={() => {}} />
+      <GeneralButton title="Login" onPress={handleAuthAction} />
       <View style={styles.signuproute}>
         <Text>New here ? </Text>
         <Pressable onPress={() => router.push("/signup")}>

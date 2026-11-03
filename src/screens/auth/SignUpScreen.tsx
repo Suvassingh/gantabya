@@ -12,13 +12,23 @@ import IconButton from "@/components/IconButton";
 import GeneralButton from "@/components/GeneralButton";
 import { useRouter } from "expo-router";
 import { Checkbox } from "expo-checkbox";
-// import {useState} from "react";
+import { signUpWithEmailAndPassword } from "@/services/auth";
 function SignUpScreen() {
   const [isChecked, setChecked] = useState(false);
-
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
-
+   const router = useRouter();
+  const handleAuthAction = async () => {
+    if (!email || !password || !name) {
+      alert("Please fill in all fields.");
+      return;
+    }
+ 
+    await signUpWithEmailAndPassword(email, password, name);
+ 
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.login}>Create an account</Text>
@@ -33,14 +43,26 @@ function SignUpScreen() {
         />
       </View>
       <Text>Name</Text>
-      <TextInput style={styles.input} placeholder="Your Name" />
+      <TextInput style={styles.input} placeholder="Your Name" value={name} onChangeText={setName} />
       <Text>Email</Text>
-      <TextInput style={styles.input} placeholder="you@gmail.com" />
+      <TextInput
+        style={styles.input}
+        placeholder="you@gmail.com"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
 
       <Text>Password</Text>
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.passwordInput}
+          value={password}
+          onChangeText={setPassword}
+          autoCapitalize="none"
+          autoCorrect={false}
           placeholder="********"
           secureTextEntry={!showPassword}
         />
@@ -60,7 +82,7 @@ function SignUpScreen() {
         />
         <Text style={styles.termText}>I agree to the Terms and Conditions</Text>
       </View>
-      <GeneralButton title="Login" onPress={() => {}} />
+      <GeneralButton title="Sign Up" onPress={handleAuthAction} />
       <View style={styles.signuproute}>
         <Text>Already have an account? </Text>
         <Pressable onPress={() => router.dismiss()}>

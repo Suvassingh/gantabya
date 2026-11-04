@@ -1,5 +1,4 @@
 import {
-  getAuth,
   signInWithEmailAndPassword as firebaseSignIn,
   createUserWithEmailAndPassword,
   signOut as firebaseSignOut,
@@ -8,6 +7,8 @@ import {
 
 import { Alert } from "react-native";
 import { auth } from "./firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "./firebase";
 // const auth = getAuth();
 
 export async function signUpWithEmailAndPassword(
@@ -21,10 +22,17 @@ export async function signUpWithEmailAndPassword(
       email,
       password,
     );
-    if (name && userCredential.user) {
-      await updateProfile(userCredential.user, { displayName: name });
+    const user = userCredential.user;
+    if (user) {
+      await updateProfile(user, { displayName: name });
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: name,
+        email: email,
+        createdAt: new Date(),
+      });
     }
-    return userCredential.user;
+    return user;
   } catch (error: any) {
     if (error.code === "auth/email-already-in-use") {
       Alert.alert("That email address is already in use!");

@@ -1,24 +1,42 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextStyle,
+  ViewStyle,
+  StyleProp,
+} from "react-native";
 import React from "react";
 import { Colors } from "@/constants/colors";
 type PillButton = {
   title: string;
   isActive: boolean;
   onPress: () => void;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 };
-const PillButton = ({ title, isActive, onPress }: PillButton) => {
+const PillButton = ({
+  title,
+  isActive,
+  onPress,
+  style,
+  textStyle,
+}: PillButton) => {
   return (
     <Pressable
       onPress={onPress}
       style={[
         styles.button,
         isActive ? styles.activeButton : styles.inactiveButton,
+        style,
+        styles.base,
       ]}
     >
       <Text
         style={[
           styles.text,
           isActive ? styles.activeText : styles.inactiveText,
+          textStyle,
         ]}
       >
         {title}
@@ -37,7 +55,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    
   },
 
   activeButton: {
@@ -60,4 +77,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
+  base: { alignItems: "center", justifyContent: "center" },
 });

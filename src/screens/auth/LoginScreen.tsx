@@ -77,7 +77,7 @@ function LoginScreen() {
           <Text style={styles.createAccountText}>Create account</Text>
         </Pressable>
       </View>
-      <View style={styles.signuproute}>
+      {/* <View style={styles.signuproute}>
         <Pressable
           onPress={() => {
             console.log("sfdfdfdf");
@@ -85,7 +85,7 @@ function LoginScreen() {
         >
           <Text>Continue without an account</Text>
         </Pressable>
-      </View>
+      </View> */}
     </View>
   );
 }

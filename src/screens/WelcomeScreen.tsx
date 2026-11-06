@@ -4,13 +4,15 @@ import { Colors } from "../constants/colors";
 import GeneralButton from "@/components/GeneralButton";
 import PillButton from "@/components/PillButton";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 const WelcomeScreen = () => {
   const router = useRouter();
   function getStartedHandler() {
     router.push("/login");
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.Gcard}>
         <Text style={styles.Gtext}>G</Text>
       </View>
@@ -35,7 +37,7 @@ const WelcomeScreen = () => {
         </View>
         <GeneralButton onPress={getStartedHandler} title="Get started" />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -52,7 +54,6 @@ const styles = StyleSheet.create({
   },
   Gcard: {
     backgroundColor: Colors.primary,
-    padding: 20,
     borderRadius: 20,
     height: 60,
     width: 60,
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   },
   Gtext: {
     color: Colors.onPrimary,
-    fontSize: 30,
+    fontSize:30,
     fontWeight: "bold",
   },
   rideText: {

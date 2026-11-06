@@ -1,33 +1,34 @@
 import { AuthProvider, useAuth } from "@/store/AuthContext";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-
+import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <SafeAreaProvider>
+        <RootNavigator />
+      </SafeAreaProvider>
     </AuthProvider>
   );
 }
 
 function RootNavigator() {
-  const { user, initializing } = useAuth();
+  const { user, initializing, isGuest } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     if (initializing) return;
 
-    const inAuthGroup = segments[0] === "(tabs)"; // The folder name for your tabs
+    const inAuthGroup = segments[0] === "(tabs)";
+    const signedIn = !!user || isGuest;
 
-    if (!user && inAuthGroup) {
-      // If not logged in and trying to access tabs, w
+    if (!signedIn && inAuthGroup) {
       router.replace("/");
-    } else if (user && !inAuthGroup) {
-      // If logged in and on the welcome/login screen, redirect to tabs
+    } else if (signedIn && !inAuthGroup) {
       router.replace("/(tabs)");
     }
-  }, [user, initializing, segments]);
+  }, [user,isGuest, initializing, segments]);
 
   if (initializing) return null;
 

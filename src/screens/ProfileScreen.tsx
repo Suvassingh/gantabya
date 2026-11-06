@@ -24,9 +24,24 @@ const ProfileScreen = () => {
   const [isChecked, setChecked] = React.useState(false);
   const [isPresented, setIsPresented] = useState(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signOutGuest } = useAuth();
   console.log("[profile] user:", user?.email ?? "null");
-
+  const handleLogout = () => {
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: async () => {
+          if (user) {
+            await signOut();
+          } else {
+            signOutGuest();
+          }
+        },
+      },
+    ]);
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.profileText}>Profile</Text>
@@ -97,23 +112,7 @@ const ProfileScreen = () => {
           </Modal>
         </View>
       </View>
-      <GeneralButton
-        onPress={async () => {
-          if (Platform.OS === "web") {
-            const ok =
-              typeof window !== "undefined" &&
-              window.confirm("Are you sure you want to logout?");
-            if (!ok) return;
-            await signOut();
-            return;
-          }
-          Alert.alert("Logout", "Are you sure you want to logout?", [
-            { text: "Cancel", style: "cancel" },
-            { text: "Logout", style: "destructive", onPress: () => signOut() },
-          ]);
-        }}
-        title="Logout"
-      />
+      <GeneralButton onPress={handleLogout} title="Logout" />
     </View>
   );
 };

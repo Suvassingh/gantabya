@@ -6,6 +6,9 @@ import {
   TextInput,
   Pressable,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from "react-native";
 import { Colors } from "@/constants/colors";
 import IconButton from "@/components/IconButton";
@@ -13,92 +16,112 @@ import GeneralButton from "@/components/GeneralButton";
 import { useRouter } from "expo-router";
 import { Checkbox } from "expo-checkbox";
 import { signUpWithEmailAndPassword } from "@/services/auth";
+import { useAuth } from "@/store/AuthContext";
 function SignUpScreen() {
   const [isChecked, setChecked] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-   const router = useRouter();
+  const router = useRouter();
+  const { continueAsGuest } = useAuth();
   const handleAuthAction = async () => {
     if (!email || !password || !name) {
       alert("Please fill in all fields.");
       return;
     }
- 
-    await signUpWithEmailAndPassword(email, password, name);
- 
-  };
-  return (
-    <View style={styles.container}>
-      <Text style={styles.login}>Create an account</Text>
-      <Text style={styles.description}>
-        Sign up to save your favorite routes and places.
-      </Text>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../../assets/images/bus.png")}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
-      <Text>Name</Text>
-      <TextInput style={styles.input} placeholder="Your Name" value={name} onChangeText={setName} />
-      <Text>Email</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="you@gmail.com"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
 
-      <Text>Password</Text>
-      <View style={styles.passwordContainer}>
+    await signUpWithEmailAndPassword(email, password, name);
+  };
+  function withOutAnAccountHandler() {
+    continueAsGuest();
+    router.dismissAll();
+    router.replace("/(tabs)");
+  }
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: Colors.background }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* <View style={styles.container}> */}
+        <Text style={styles.login}>Create an account</Text>
+        <Text style={styles.description}>
+          Sign up to save your favorite routes and places.
+        </Text>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../../../assets/images/bus.png")}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
+        <Text>Name</Text>
         <TextInput
-          style={styles.passwordInput}
-          value={password}
-          onChangeText={setPassword}
+          style={styles.input}
+          placeholder="Your Name"
+          value={name}
+          onChangeText={setName}
+        />
+        <Text>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="you@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
-          placeholder="********"
-          secureTextEntry={!showPassword}
         />
-        <IconButton
-          onPress={() => setShowPassword((prev) => !prev)}
-          name={showPassword ? "eye-off" : "eye"}
-          size={20}
-          color={Colors.muted}
-        />
-      </View>
-      <View style={styles.termView}>
-        <Checkbox
-          style={styles.checkbox}
-          value={isChecked}
-          onValueChange={setChecked}
-          color={Colors.primary}
-        />
-        <Text style={styles.termText}>I agree to the Terms and Conditions</Text>
-      </View>
-      <GeneralButton title="Sign Up" onPress={handleAuthAction} />
-      <View style={styles.signuproute}>
-        <Text>Already have an account? </Text>
-        <Pressable onPress={() => router.dismiss()}>
-          <Text style={styles.createAccountText}>Log in</Text>
-        </Pressable>
-      </View>
-      <View style={styles.signuproute}>
-        <Pressable
-          onPress={() => {
-            console.log("sfdfdfdf");
-          }}
-        >
-          <Text>Continue without an account</Text>
-        </Pressable>
-      </View>
-    </View>
+
+        <Text>Password</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            value={password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholder="********"
+            secureTextEntry={!showPassword}
+          />
+          <IconButton
+            onPress={() => setShowPassword((prev) => !prev)}
+            name={showPassword ? "eye-off" : "eye"}
+            size={20}
+            color={Colors.muted}
+          />
+        </View>
+        <View style={styles.termView}>
+          <Checkbox
+            style={styles.checkbox}
+            value={isChecked}
+            onValueChange={setChecked}
+            color={Colors.primary}
+          />
+          <Text style={styles.termText}>
+            I agree to the Terms and Conditions
+          </Text>
+        </View>
+        <GeneralButton title="Sign Up" onPress={handleAuthAction} />
+        <View style={styles.signuproute}>
+          <Text>Already have an account? </Text>
+          <Pressable onPress={() => router.dismiss()}>
+            <Text style={styles.createAccountText}>Log in</Text>
+          </Pressable>
+        </View>
+        <View style={styles.signuproute}>
+          <Pressable onPress={withOutAnAccountHandler}>
+            <Text>Continue without an account</Text>
+          </Pressable>
+        </View>
+        {/* </View> */}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -111,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     padding: 20,
+    paddingBottom: 40,
   },
   login: {
     fontSize: 24,

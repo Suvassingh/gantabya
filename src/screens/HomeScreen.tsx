@@ -1,34 +1,46 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import GeneralButton from "@/components/GeneralButton";
 import { Colors } from "@/constants/colors";
 import PillButton from "@/components/PillButton";
+import LocationPicker from "@/location/LocationPicker";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 const HomeScreen = () => {
+  const [fromLocation, setFromLocation] = useState("");
   function getStartedHandler() {
     console.log("sdfsdf");
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.namasteText}>Namaste</Text>
       <Text style={styles.whereToText}>Where to in the Valley?</Text>
       {/* form section */}
       <View style={styles.formView}>
         <View>
           <Text style={styles.text}>From</Text>
-          <TextInput
-            style={styles.inputView}
-            placeholder="Choose your current location"
-          />
+          <View style={styles.fromView}>
+            <TextInput
+              style={[styles.inputView, styles.flexInput]}
+              placeholder="Choose your current location"
+            />
+            <LocationPicker onLocationPicked={setFromLocation} />
+          </View>
         </View>
+
         <View>
           <Text style={styles.text}>To</Text>
-          <TextInput
-            style={styles.inputView}
-            placeholder="Search a stop or place"
-          />
+          <View style={styles.fromView}>
+            <TextInput
+              style={[styles.inputView, styles.flexInput]}
+              placeholder="Search a stop or place"
+            />
+            {/* <LocationPicker /> */}
+          </View>
         </View>
         <GeneralButton onPress={() => {}} title="Find route" />
       </View>
+
       {/* Popular section */}
       <Text style={styles.popText}>Popular stops</Text>
       <View style={styles.poularStopView}>
@@ -58,7 +70,7 @@ const HomeScreen = () => {
           isActive={false}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -98,7 +110,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.muted,
     marginBottom: 12,
-    width: "100%",
+  },
+  fromView: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginVertical: 8,
+  },
+  flexInput: {
+    flex: 1,
+    marginVertical: 0,
+    marginBottom: 0,
   },
   text: {
     color: Colors.muted,

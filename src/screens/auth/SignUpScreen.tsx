@@ -129,7 +129,7 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: Colors.background,
     alignItems: "flex-start",
     justifyContent: "flex-start",

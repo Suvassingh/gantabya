@@ -18,6 +18,8 @@ import { signOut } from "@/services/auth";
 import { Alert } from "react-native";
 import { Platform } from "react-native";
 import { useAuth } from "@/store/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 const SHEET_BG = Colors.muted;
 const SHEET_TEXT = "#FFFFFF";
 const ProfileScreen = () => {
@@ -43,7 +45,7 @@ const ProfileScreen = () => {
     ]);
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.profileText}>Profile</Text>
       {/* Container */}
       <View style={styles.contentContainer}>
@@ -113,7 +115,7 @@ const ProfileScreen = () => {
         </View>
       </View>
       <GeneralButton onPress={handleLogout} title="Logout" />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     marginTop: 20,
+    marginBottom: 20,
   },
   languageView: {
     flexDirection: "row",

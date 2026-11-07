@@ -6,18 +6,23 @@ import {
   TextInput,
   Pressable,
   Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from "react-native";
 import { Colors } from "@/constants/colors";
 import IconButton from "@/components/IconButton";
 import GeneralButton from "@/components/GeneralButton";
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "@/services/auth";
+import { useAuth } from "@/store/AuthContext";
 
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { continueAsGuest } = useAuth();
 
   const handleAuthAction = async () => {
     if (!email || !password) {
@@ -25,68 +30,79 @@ function LoginScreen() {
       return;
     }
     await signInWithEmailAndPassword(email, password);
-
   };
+  function withOutAnAccountHandler() {
+    continueAsGuest();
+    router.dismissAll();
+    router.replace("/(tabs)");
+  }
   return (
-    <View style={styles.container}>
-      <Text style={styles.login}>Welcome back!</Text>
-      <Text style={styles.description}>
-        Login to see your saved routes and places.
-      </Text>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../../assets/images/bus.png")}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
-      <Text>Email</Text>
-      <TextInput style={styles.input} placeholder="you@gmail.com" 
-      value={email}
-      onChangeText={setEmail}
-      keyboardType="email-address"
-      autoCapitalize="none"
-      autoCorrect={false}
-      />
-
-      <Text>Password</Text>
-      <View style={styles.passwordContainer}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: Colors.background }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* <View style={styles.container}> */}
+        <Text style={styles.login}>Welcome back!</Text>
+        <Text style={styles.description}>
+          Login to see your saved routes and places.
+        </Text>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../../../assets/images/bus.png")}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
+        <Text>Email</Text>
         <TextInput
-          style={styles.passwordInput}
-          value={password}
-          onChangeText={setPassword}
+          style={styles.input}
+          placeholder="you@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
-          placeholder="********"
-          secureTextEntry={!showPassword}
         />
-        <IconButton
-          onPress={() => setShowPassword((prev) => !prev)}
-          name={showPassword ? "eye-off" : "eye"}
-          size={20}
-          color={Colors.muted}
-        />
-      </View>
-      <View style={styles.forget}>
-        <Text style={styles.forgetText}>Forgot password?</Text>
-      </View>
-      <GeneralButton title="Login" onPress={handleAuthAction} />
-      <View style={styles.signuproute}>
-        <Text>New here ? </Text>
-        <Pressable onPress={() => router.push("/signup")}>
-          <Text style={styles.createAccountText}>Create account</Text>
-        </Pressable>
-      </View>
-      {/* <View style={styles.signuproute}>
-        <Pressable
-          onPress={() => {
-            console.log("sfdfdfdf");
-          }}
-        >
-          <Text>Continue without an account</Text>
-        </Pressable>
-      </View> */}
-    </View>
+        <Text>Password</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            value={password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholder="********"
+            secureTextEntry={!showPassword}
+          />
+          <IconButton
+            onPress={() => setShowPassword((prev) => !prev)}
+            name={showPassword ? "eye-off" : "eye"}
+            size={20}
+            color={Colors.muted}
+          />
+        </View>
+        <View style={styles.forget}>
+          <Text style={styles.forgetText}>Forgot password?</Text>
+        </View>
+        <GeneralButton title="Login" onPress={handleAuthAction} />
+        <View style={styles.signuproute}>
+          <Text>New here ? </Text>
+          <Pressable onPress={() => router.push("/signup")}>
+            <Text style={styles.createAccountText}>Create account</Text>
+          </Pressable>
+        </View>
+        <View style={styles.signuproute}>
+          <Pressable onPress={withOutAnAccountHandler}>
+            <Text>Continue without an account</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -94,7 +110,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: Colors.background,
     alignItems: "flex-start",
     justifyContent: "flex-start",

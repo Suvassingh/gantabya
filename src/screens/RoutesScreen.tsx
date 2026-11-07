@@ -13,6 +13,7 @@ import VehiclesContainer from "@/components/vehiclesContainer";
 import { SeedRoute, VehicleType } from "@/data/routesSeed";
 import { fetchRoutes } from "@/services/routes";
 const CATEGORIES = ["All", "Sajha", "Micro", "Tempo"] as const;
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const pillBase = {
   paddingVertical: 8,
@@ -51,7 +52,7 @@ const RoutesScreen = () => {
     return matchesCategory && matchesSearch;
   });
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.all}>All Routes</Text>
       <Text style={styles.search}>Search</Text>
       <TextInput
@@ -95,7 +96,7 @@ const RoutesScreen = () => {
           ))
         )}
       </RoutesListContainer>
-    </View>
+    </SafeAreaView>
   );
 };
 export default RoutesScreen;

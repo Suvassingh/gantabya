@@ -15,11 +15,9 @@ const LocationPicker = ({ onLocationPicked }: LocationPickerProps) => {
     useForegroundPermissions();
 
   async function verifyPermission() {
-    if (locationPermissionInformation?.status === "undetermined") {
-      const permissionResponse = await requestPermission();
-      return permissionResponse.granted;
-    }
-    if (locationPermissionInformation?.status === "denied") {
+    if (locationPermissionInformation?.granted) return true;
+    const response = await requestPermission();
+    if (!response.granted) {
       Alert.alert(
         "Insufficient Permission !",
         "You need to grant the location permission to use this app",
@@ -37,26 +35,23 @@ const LocationPicker = ({ onLocationPicked }: LocationPickerProps) => {
       const location = await getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
-      // Default fallback: formatted coordinates
       let placeName = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
 
-      // Attempt reverse geocoding only if not on web
-      // (On web, SDK 49+ will warn and may fail)
       if (Platform.OS !== "web") {
         try {
           const addresses = await reverseGeocodeAsync({ latitude, longitude });
           if (addresses.length > 0) {
-            const place = addresses[0];
-            // Build a readable name, prioritizing specific fields
-            placeName =
-              place.name ||
-              place.street ||
-              place.city ||
-              place.region ||
-              placeName; // keep coordinates if all fields are null
+            const p = addresses[0];
+            const parts = [
+              p.street ?? p.name,
+              p.district ?? p.subregion,
+              p.city,
+            ].filter(Boolean);
+            if (parts.length > 0) {
+              placeName = Array.from(new Set(parts)).join(", ");
+            }
           }
         } catch (geocodeError) {
-          // Silently fall back to coordinates if geocoding fails
           console.warn(
             "Reverse geocoding failed, using coordinates:",
             geocodeError,
@@ -76,7 +71,7 @@ const LocationPicker = ({ onLocationPicked }: LocationPickerProps) => {
       <View></View>
       <View>
         <IconButton
-          name="map-outline"
+          name="location"
           onPress={getLocationHandler}
           size={24}
           color=""

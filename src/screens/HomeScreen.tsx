@@ -101,9 +101,6 @@ const HomeScreen = () => {
     else setToLocation(stop);
   };
 
-  function getStartedHandler() {
-    console.log("sdfsdf");
-  }
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.namasteText}>Namaste</Text>

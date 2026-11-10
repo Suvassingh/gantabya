@@ -1,13 +1,16 @@
 import { AuthProvider, useAuth } from "@/store/AuthContext";
+import { SavedProvider } from "@/store/SavedContext";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <SafeAreaProvider>
-        <RootNavigator />
-      </SafeAreaProvider>
+      <SavedProvider>
+        <SafeAreaProvider>
+          <RootNavigator />
+        </SafeAreaProvider>
+      </SavedProvider>
     </AuthProvider>
   );
 }
@@ -28,7 +31,7 @@ function RootNavigator() {
     } else if (signedIn && !inAuthGroup) {
       router.replace("/(tabs)");
     }
-  }, [user,isGuest, initializing, segments]);
+  }, [user, isGuest, initializing, segments]);
 
   if (initializing) return null;
 

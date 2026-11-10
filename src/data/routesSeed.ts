@@ -9,6 +9,7 @@ export type SeedRoute = {
   durationMinutes: number;
   popular?: boolean;
 };
+export type Route = SeedRoute & { id: string };
 
 export const ROUTES_SEED: SeedRoute[] = [
   {

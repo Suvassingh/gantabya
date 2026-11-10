@@ -10,7 +10,7 @@ import PillButton from "@/components/PillButton";
 import { Colors } from "@/constants/colors";
 import RoutesListContainer from "@/components/RoutesListContainer";
 import VehiclesContainer from "@/components/vehiclesContainer";
-import { SeedRoute, VehicleType } from "@/data/routesSeed";
+import { Route, VehicleType } from "@/data/routesSeed";
 import { fetchRoutes } from "@/services/routes";
 const CATEGORIES = ["All", "Sajha", "Micro", "Tempo"] as const;
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,7 +26,7 @@ const pillBase = {
 const RoutesScreen = () => {
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
   const [search, setSearch] = useState("");
-  const [routes, setRoutes] = useState<SeedRoute[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

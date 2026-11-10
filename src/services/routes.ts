@@ -1,15 +1,15 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
-import { SeedRoute } from "@/data/routesSeed";
+import { Route, VehicleType } from "@/data/routesSeed";
 
-export async function fetchRoutes(): Promise<SeedRoute[]> {
+export async function fetchRoutes(): Promise<Route[]> {
   try {
     const querySnapshot = await getDocs(collection(db, "routes"));
 
     const routes = querySnapshot.docs.map((doc) => {
       const data = doc.data();
       return {
-        id:doc.id,
+        id: doc.id,
         from: data.from,
         to: data.to,
         stops: data.stops,
@@ -17,7 +17,7 @@ export async function fetchRoutes(): Promise<SeedRoute[]> {
         fare: data.fare,
         durationMinutes: data.durationMinutes,
         popular: data.popular,
-      } as SeedRoute;
+      };
     });
 
     return routes;

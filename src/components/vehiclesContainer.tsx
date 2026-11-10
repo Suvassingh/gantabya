@@ -1,6 +1,9 @@
-import { View, StyleSheet, Text, ScrollView } from "react-native";
-import { SeedRoute } from "@/data/routesSeed";
+import { View, StyleSheet, Text, ScrollView, Pressable } from "react-native";
+import { Route } from "@/data/routesSeed";
 import { Vehicle, Colors } from "@/constants/colors";
+import IconButton from "./IconButton";
+import { useSavedRoutes } from "@/store/SavedContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const VEHICLE_STYLES: Record<string, { bg: string; text: string }> = {
   sajha: Vehicle.sajha,
@@ -8,7 +11,10 @@ const VEHICLE_STYLES: Record<string, { bg: string; text: string }> = {
   tempo: Vehicle.tempo,
 };
 
-function VehiclesContainer({ vehicles, from, to, stops, fare }: SeedRoute) {
+function VehiclesContainer({ id, vehicles, from, to, stops, fare }: Route) {
+  const { isSaved, toggleSave } = useSavedRoutes();
+  const saved = isSaved(id);
+
   return (
     <View style={styles.card}>
       {/* Top Section */}
@@ -42,7 +48,21 @@ function VehiclesContainer({ vehicles, from, to, stops, fare }: SeedRoute) {
         </View>
 
         {/* Fare */}
-        <Text style={styles.fare}>Rs {fare}</Text>
+        <View style={styles.favcontainer}>
+          <Pressable
+            onPress={() => toggleSave(id)}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={saved ? "Remove from saved" : "Save route"}
+          >
+            <Ionicons
+              name={saved ? "bookmark" : "bookmark-outline"}
+              size={22}
+              color={saved ? Colors.primary : Colors.muted}
+            />
+          </Pressable>
+          <Text style={styles.fare}>Rs {fare}</Text>
+        </View>
       </View>
 
       {/* Bottom Section: Stops */}
@@ -69,7 +89,7 @@ export default VehiclesContainer;
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    backgroundColor: "#FFFFFF", 
+    backgroundColor: "#FFFFFF",
     marginTop: 10,
     padding: 16,
     borderRadius: 12,
@@ -80,13 +100,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12, 
+    marginBottom: 12,
   },
   leftGroup: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    flex: 1, 
+    flex: 1,
   },
   badgeRow: {
     flexDirection: "row",
@@ -97,15 +117,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 16, 
+    borderRadius: 16,
   },
   badgeText: {
     fontSize: 12,
     fontWeight: "600",
   },
   textContainer: {
-    flex: 1,
+    // flex: 1,
+    // justifyContent: "center",
+  },
+  favcontainer: {
     justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 16,
